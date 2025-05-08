@@ -1,4 +1,0 @@
-Flask
-Pillow
-python-barcode
-reportlab
