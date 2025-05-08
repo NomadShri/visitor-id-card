@@ -27,8 +27,8 @@ def generate():
     draw = ImageDraw.Draw(card)
 
     # Load fonts
-    title_font = ImageFont.truetype("arial.ttf", 28)
-    text_font = ImageFont.truetype("arial.ttf", 22)
+    title_font = ImageFont.truetype("Roboto-Regular", 28)
+    text_font = ImageFont.truetype("Roboto-Regular", 22)
 
     # Load logo
     base_dir = os.path.dirname(os.path.abspath(__file__))
