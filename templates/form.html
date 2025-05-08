@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visitor ID Card Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 400px; margin: auto; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; }
+        label { font-weight: bold; }
+        video, canvas { display: block; margin: 10px auto; max-width: 100%; }
+    </style>
+</head>
+<body>
+    <h2>Visitor ID Card Form</h2>
+    <form method="POST" action="/generate" enctype="multipart/form-data">
+        <label>Name:</label>
+        <input type="text" name="name" placeholder="Name" required>
+
+        <label>Mobile (10 digits):</label>
+        <input type="text" name="mobile" placeholder="Mobile" required pattern="\d{10}" title="10 digit mobile number">
+
+        <label>Aadhar (12 digits):</label>
+        <input type="text" name="aadhar" placeholder="Aadhar" required pattern="\d{12}" title="12 digit Aadhar number">
+
+        <label>Meeting With:</label>
+        <input type="text" name="meeting_with" placeholder="Meeting With" required>
+
+        <label>Work / Purpose:</label>
+        <input type="text" name="work" placeholder="Work" required>
+
+        <!-- Mobile camera fallback -->
+        <label>Upload Photo (Mobile fallback):</label>
+        <input type="file" name="photo" accept="image/*" capture="environment">
+
+        <label>Or Capture from Webcam (PC):</label>
+        <video id="video" autoplay></video>
+        <button type="button" id="snap">Capture Photo</button>
+        <canvas id="canvas" style="display:none;"></canvas>
+        <input type="hidden" name="photo_data" id="photo_data">
+
+        <button type="submit">Generate ID Card</button>
+    </form>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const photoData = document.getElementById('photo_data');
+
+        // Check if media devices are supported
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function(err) {
+                    console.log("Webcam not accessible: " + err);
+                });
+        }
+
+        // Capture photo
+        snap.addEventListener('click', function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/jpeg');
+            photoData.value = dataURL;
+            alert("Photo captured! You can now submit the form.");
+        });
+    </script>
+</body>
+</html>
